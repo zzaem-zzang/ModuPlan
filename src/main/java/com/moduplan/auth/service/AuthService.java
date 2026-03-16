@@ -1,6 +1,6 @@
 package com.moduplan.auth.service;
 
-import com.global.exception.BadRequestException;
+import com.moduplan.global.exception.BadRequestException;
 import com.moduplan.auth.dto.SignupRequest;
 import com.moduplan.auth.dto.SignupResponse;
 import com.moduplan.user.entity.User;
