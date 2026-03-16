@@ -1,9 +1,14 @@
 package com.moduplan.auth.service;
 
+import com.moduplan.auth.dto.LoginRequest;
+import com.moduplan.auth.dto.LoginResponse;
 import com.moduplan.global.exception.BadRequestException;
 import com.moduplan.auth.dto.SignupRequest;
 import com.moduplan.auth.dto.SignupResponse;
+import com.moduplan.global.exception.ForbiddenException;
+import com.moduplan.global.exception.UnauthorizedException;
 import com.moduplan.user.entity.User;
+import com.moduplan.user.entity.UserStatus;
 import com.moduplan.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,8 +36,26 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         return new SignupResponse(
-                savedUser.getId(),
-                "회원기입이 완료되었습니다."
+                savedUser.getId()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request){
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new UnauthorizedException("이메일 또는 비밀번호가 올바르지 않습니다."));
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())){
+            throw new BadRequestException("이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new ForbiddenException("비활성화된 계정입니다.");
+        }
+
+        return new LoginResponse(
+                user.getId(),
+                user.getNickname()
         );
     }
 }
