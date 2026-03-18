@@ -13,13 +13,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider {
+public class
+JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
-    private long expiration;
+    @Value("${jwt.access-expiration}")
+    private long accessExpiration;
+
+    @Value("${jwt.refresh-expiration}")
+    private long refreshExpiration;
 
     private SecretKey key;
 
@@ -28,7 +32,17 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(Long userId, String email){
+    //access 생성
+    public String createAccessToken(long userId, String email){
+        return createToken(userId, email, accessExpiration);
+    }
+
+    //refresh 생성
+    public String createRefreshToken(long userId, String email){
+        return createToken(userId, email, refreshExpiration);
+    }
+
+    public String createToken(Long userId, String email, long expiration){
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiration);
 
