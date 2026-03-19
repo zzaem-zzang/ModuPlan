@@ -1,10 +1,8 @@
 package com.moduplan.auth.service;
 
-import com.moduplan.auth.dto.LoginRequest;
-import com.moduplan.auth.dto.LoginResponse;
+import com.moduplan.auth.dto.*;
+import com.moduplan.auth.jwt.JwtTokenProvider;
 import com.moduplan.global.exception.BadRequestException;
-import com.moduplan.auth.dto.SignupRequest;
-import com.moduplan.auth.dto.SignupResponse;
 import com.moduplan.global.exception.ForbiddenException;
 import com.moduplan.global.exception.UnauthorizedException;
 import com.moduplan.user.entity.User;
@@ -22,6 +20,9 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RedisService redisService;
+
 
     public SignupResponse signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.email())){
@@ -40,22 +41,55 @@ public class AuthService {
         );
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public LoginResponse login(LoginRequest request){
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UnauthorizedException("이메일 또는 비밀번호가 올바르지 않습니다."));
 
+        // 비밀번호 틀림은 -> 인증실패
         if (!passwordEncoder.matches(request.password(), user.getPassword())){
-            throw new BadRequestException("이메일 또는 비밀번호가 올바르지 않습니다.");
+            throw new UnauthorizedException("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
 
         if (user.getStatus() == UserStatus.INACTIVE) {
             throw new ForbiddenException("비활성화된 계정입니다.");
         }
 
+        String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getEmail());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getId(), user.getEmail());
+
+        redisService.saveRefreshToken(user.getId(), refreshToken);
         return new LoginResponse(
                 user.getId(),
-                user.getNickname()
+                user.getNickname(),
+                accessToken,
+                refreshToken
         );
+    }
+    // 토큰 재발급
+    @Transactional
+    public TokenResponse reissueToken(TokenReissueRequest request) {
+        String refreshToken = request.refreshToken();
+
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new UnauthorizedException("유효하지 않은 리프레시 토큰입니다.");
+        }
+
+        Long userId = jwtTokenProvider.getUserId(refreshToken);
+        String email = jwtTokenProvider.getEmail(refreshToken);
+
+        String savedRefreshToken = redisService.getRefreshToken(userId);
+
+        if (savedRefreshToken == null || !savedRefreshToken.equals(refreshToken)) {
+            throw new UnauthorizedException("리프레시 토큰이 일치하지 않습니다.");
+        }
+
+        String newAccessToken = jwtTokenProvider.createAccessToken(userId, email);
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(userId, email);
+
+        redisService.saveRefreshToken(userId, newRefreshToken);
+
+        return new TokenResponse(newAccessToken, newRefreshToken);
+
     }
 }
