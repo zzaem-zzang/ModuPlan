@@ -1,13 +1,17 @@
 package com.moduplan.user.service;
 
 import com.moduplan.auth.jwt.JwtTokenProvider;
+import com.moduplan.auth.service.RedisService;
+import com.moduplan.global.exception.BadRequestException;
 import com.moduplan.global.exception.NotFoundException;
 import com.moduplan.global.exception.UnauthorizedException;
 import com.moduplan.user.dto.MyInfoResponse;
 import com.moduplan.user.dto.UserDetailResponse;
+import com.moduplan.user.dto.WithdrawRequest;
 import com.moduplan.user.entity.User;
 import com.moduplan.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RedisService redisService;
 
     public MyInfoResponse getMyInfo(Long userId) {
         User user = userRepository.findById(userId)
@@ -39,5 +45,18 @@ public class UserService {
                 user.getNickname(),
                 0
         );
+    }
+
+    @Transactional
+    public void withdraw(Long userId, WithdrawRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
+        }
+
+        redisService.deleteRefreshToken(userId);
+        user.withdraw();
     }
 }

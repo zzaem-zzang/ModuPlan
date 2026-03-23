@@ -46,6 +46,10 @@ public class AuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UnauthorizedException("이메일 또는 비밀번호가 올바르지 않습니다."));
 
+        if (user.getDeletedAt() != null) {
+            throw new UnauthorizedException("탈퇴한 사용자입니다.");
+        }
+
         // 비밀번호 틀림은 -> 인증실패
         if (!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new UnauthorizedException("이메일 또는 비밀번호가 올바르지 않습니다.");
