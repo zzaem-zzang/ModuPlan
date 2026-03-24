@@ -1,6 +1,7 @@
-﻿package com.moduplan.group.service;
+package com.moduplan.group.service;
 
 import com.moduplan.global.exception.BadRequestException;
+import com.moduplan.global.exception.ForbiddenException;
 import com.moduplan.global.exception.NotFoundException;
 import com.moduplan.group.dto.GroupCreateRequest;
 import com.moduplan.group.dto.GroupCreateResponse;
@@ -159,6 +160,18 @@ public class GroupServiceImpl implements GroupService {
         );
 
         return MyGroupPageResponse.from(responsePage);
+    }
+
+    @Override
+    public void deleteGroup(Long userId, Long groupId) {
+        Group group = groupRepository.findByIdAndDeletedAtIsNullAndStatus(groupId, GroupStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 모임입니다."));
+
+        if (!group.getLeader().getId().equals(userId)) {
+            throw new ForbiddenException("모임장이 아닌 사용자입니다.");
+        }
+
+        group.delete();
     }
 
     private boolean isBlank(String value) {

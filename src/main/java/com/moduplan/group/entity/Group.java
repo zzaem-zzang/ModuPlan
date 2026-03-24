@@ -7,7 +7,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-// 테이블명 groups -> meeting_groups로 수정
 @Table(name = "meeting_groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -80,4 +79,9 @@ public class Group {
                 .build();
     }
 
+    public void delete() {
+        this.status = GroupStatus.CLOSED;
+        this.deletedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 }

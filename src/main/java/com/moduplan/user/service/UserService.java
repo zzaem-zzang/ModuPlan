@@ -1,4 +1,4 @@
-﻿package com.moduplan.user.service;
+package com.moduplan.user.service;
 
 import com.moduplan.user.dto.MyInfoResponse;
 import com.moduplan.user.dto.UserDetailResponse;

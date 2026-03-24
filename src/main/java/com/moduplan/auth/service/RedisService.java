@@ -1,4 +1,4 @@
-﻿package com.moduplan.auth.service;
+package com.moduplan.auth.service;
 
 public interface RedisService {
 

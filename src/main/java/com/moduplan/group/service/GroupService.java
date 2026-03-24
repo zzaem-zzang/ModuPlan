@@ -1,4 +1,4 @@
-﻿package com.moduplan.group.service;
+package com.moduplan.group.service;
 
 import com.moduplan.group.dto.GroupCreateRequest;
 import com.moduplan.group.dto.GroupCreateResponse;
@@ -16,4 +16,6 @@ public interface GroupService {
     GroupDetailResponse getGroupDetail(Long groupId);
 
     MyGroupPageResponse getMyGroup(Long userId, Pageable pageable);
+
+    void deleteGroup(Long userId, Long groupId);
 }

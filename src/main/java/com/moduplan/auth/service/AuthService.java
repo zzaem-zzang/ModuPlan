@@ -1,4 +1,4 @@
-﻿package com.moduplan.auth.service;
+package com.moduplan.auth.service;
 
 import com.moduplan.auth.dto.LoginRequest;
 import com.moduplan.auth.dto.LoginResponse;

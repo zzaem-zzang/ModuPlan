@@ -35,7 +35,6 @@ public class GroupController {
         }
 
         Long userId = (Long) authentication.getPrincipal();
-
         GroupCreateResponse response = groupService.createGroup(userId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -84,5 +83,22 @@ public class GroupController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(200, "내 모임 목록 조회에 성공했습니다.", response));
+    }
+
+    @Operation(summary = "모임 삭제")
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity<ApiResponse<Void>> deleteGroup(
+            Authentication authentication,
+            @PathVariable Long groupId
+    ) {
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new UnauthorizedException("인증되지 않은 사용자입니다.");
+        }
+
+        Long userId = (Long) authentication.getPrincipal();
+        groupService.deleteGroup(userId, groupId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(200, "모임이 삭제되었습니다.", null));
     }
 }
