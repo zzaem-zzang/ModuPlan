@@ -1,34 +1,10 @@
 package com.moduplan.auth.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
+public interface RedisService {
 
-import java.time.Duration;
+    void saveRefreshToken(Long userId, String refreshToken);
 
-@Service
-@RequiredArgsConstructor
-public class RedisService {
+    String getRefreshToken(Long userId);
 
-    private final RedisTemplate<String, String> redisTemplate;
-
-    private static final String REFRESH_TOKEN_PREFIX = "refreshToken:";
-
-    public void saveRefreshToken(Long userId, String refreshToken) {
-        redisTemplate.opsForValue().set(
-                REFRESH_TOKEN_PREFIX + userId,
-                refreshToken,
-                Duration.ofDays(7)
-        );
-    }
-
-    public String getRefreshToken(Long userId) {
-        return redisTemplate.opsForValue().get(REFRESH_TOKEN_PREFIX + userId);
-    }
-
-
-
-    public void deleteRefreshToken(Long userId) {
-        redisTemplate.delete(REFRESH_TOKEN_PREFIX + userId);
-    }
+    void deleteRefreshToken(Long userId);
 }

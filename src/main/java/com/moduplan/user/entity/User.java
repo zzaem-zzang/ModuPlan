@@ -54,4 +54,8 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void withdraw() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }
