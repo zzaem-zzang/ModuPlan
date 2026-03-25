@@ -46,4 +46,14 @@ public class GroupApplication {
                 .processedAt(null)
                 .build();
     }
+
+    public void approve() {
+        this.status = GroupApplicationStatus.APPROVED;
+        this.processedAt = LocalDateTime.now();
+    }
+
+    public void reject() {
+        this.status = GroupApplicationStatus.REJECTED;
+        this.processedAt = LocalDateTime.now();
+    }
 }

@@ -41,4 +41,13 @@ public class GroupMember {
                 .joinedAt(LocalDateTime.now())
                 .build();
     }
+
+    public static GroupMember createMember(Group group, User user) {
+        return GroupMember.builder()
+                .group(group)
+                .user(user)
+                .role(GroupRole.MEMBER)
+                .joinedAt(LocalDateTime.now())
+                .build();
+    }
 }

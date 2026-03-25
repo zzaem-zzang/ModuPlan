@@ -3,6 +3,7 @@ package com.moduplan.groupapplication.controller;
 import com.moduplan.global.exception.UnauthorizedException;
 import com.moduplan.global.response.ApiResponse;
 import com.moduplan.groupapplication.dto.GroupApplicationCreateResponse;
+import com.moduplan.groupapplication.dto.GroupApplicationProcessResponse;
 import com.moduplan.groupapplication.service.GroupApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,41 @@ public class GroupApplicationController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(201, "참여 신청이 완료되었습니다.", response));
+    }
+
+    @Operation(summary = "모임 참여 신청 승인")
+    @PostMapping("/{applicationId}/approve")
+    public ResponseEntity<ApiResponse<GroupApplicationProcessResponse>> approve(
+            Authentication authentication,
+            @PathVariable Long groupId,
+            @PathVariable Long applicationId
+    ) {
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new UnauthorizedException("인증되지 않은 사용자입니다.");
+        }
+
+        Long userId = (Long) authentication.getPrincipal();
+        GroupApplicationProcessResponse response = groupApplicationService.approve(userId, groupId, applicationId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(200, "참여 신청 승인이 완료되었습니다.", response));
+    }
+
+    @Operation(summary = "모임 참여 신청 거절")
+    @PostMapping("/{applicationId}/reject")
+    public ResponseEntity<ApiResponse<GroupApplicationProcessResponse>> reject(
+            Authentication authentication,
+            @PathVariable Long groupId,
+            @PathVariable Long applicationId
+    ) {
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new UnauthorizedException("인증되지 않은 사용자입니다.");
+        }
+
+        Long userId = (Long) authentication.getPrincipal();
+        GroupApplicationProcessResponse response = groupApplicationService.reject(userId, groupId, applicationId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(200, "참여 신청 거절이 완료되었습니다.", response));
     }
 }
