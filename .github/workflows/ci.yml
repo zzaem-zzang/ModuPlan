@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: production
+    defaults:
+      run:
+        working-directory: backend
     services:
       mysql:
         image: mysql:8.4
