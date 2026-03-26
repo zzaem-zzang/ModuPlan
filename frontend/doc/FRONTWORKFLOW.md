@@ -3,13 +3,13 @@
 ## 1. 프로젝트 세팅
 
 - [x] 프론트엔드 전용 레포지토리 생성
-- [ ] React + Vite + TypeScript 기반 프로젝트 초기화
-- [ ] 기본 라이브러리 설치
-- [ ] react-router-dom 설치
-- [ ] axios 설치
-- [ ] tailwindcss 설치
-- [ ] 기본 폴더 구조 설정
-- [ ] 백엔드 API 주소를 위한 .env 설정
+- [x] React + Vite + TypeScript 기반 프로젝트 초기화
+- [x] 기본 라이브러리 설치
+- [x] react-router-dom 설치
+- [x] axios 설치
+- [x] tailwindcss 설치
+- [x] 기본 폴더 구조 설정
+- [x] 백엔드 API 주소를 위한 .env 설정
 
 ## 2. 공통 구조 설계
 
