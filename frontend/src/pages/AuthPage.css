@@ -24,6 +24,26 @@
   gap: 8px;
 }
 
+.auth-page__error,
+.auth-page__success {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+.auth-page__error {
+  color: #b42318;
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+}
+
+.auth-page__success {
+  color: #027a48;
+  background: #ecfdf3;
+  border: 1px solid #abefc6;
+}
+
 .auth-page__hint {
   margin: 0;
   font-size: 0.95rem;
