@@ -1,28 +1,66 @@
-:root {
-  font-family: 'Pretendard', 'Noto Sans KR', 'Segoe UI', sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #2e211b;
-  background: #fbf7ef;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #effcf8;
+  --color-brand-100: #d9f7ee;
+  --color-brand-500: #14b87a;
+  --color-brand-600: #0d9b66;
+  --color-brand-700: #0d7a53;
+  --color-ink-950: #0f172a;
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  html {
+    font-family: "Pretendard", "Noto Sans KR", "Segoe UI", sans-serif;
+    color: #0f172a;
+    background:
+      radial-gradient(circle at top left, rgba(20, 184, 122, 0.12), transparent 28%),
+      linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  body {
+    @apply min-h-screen bg-transparent text-slate-900 antialiased;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  a {
+    @apply no-underline;
+  }
 }
 
-body {
-  margin: 0;
-}
+@layer components {
+  .app-shell {
+    @apply min-h-screen;
+  }
 
-#root {
-  min-height: 100vh;
-}
+  .panel {
+    @apply rounded-3xl border border-slate-200/70 bg-white/85 shadow-lg shadow-slate-200/60 backdrop-blur;
+  }
 
-button,
-input {
-  font: inherit;
+  .page-section {
+    @apply rounded-3xl border border-slate-200/70 bg-white/85 p-5 shadow-lg shadow-slate-200/60 backdrop-blur md:p-6;
+  }
+
+  .section-copy {
+    @apply mb-5 flex flex-col gap-2;
+  }
+
+  .section-eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.24em] text-brand-700;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold tracking-tight text-slate-900;
+  }
+
+  .section-description {
+    @apply text-sm leading-6 text-slate-500;
+  }
 }
