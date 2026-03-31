@@ -1,21 +1,51 @@
 import { Outlet } from 'react-router-dom'
+import './AuthLayout.css'
 
 export function AuthLayout() {
   return (
-    <div className="app-shell flex items-center justify-center px-4 py-10">
-      <div className="grid w-full max-w-5xl gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-        <section className="hidden rounded-[2rem] bg-slate-950 p-10 text-white lg:flex lg:flex-col lg:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-100">ModuPlan</p>
-            <h1 className="mt-6 text-5xl font-black tracking-tight">모임 운영을 더 단순하게.</h1>
-            <p className="mt-6 max-w-xl text-sm leading-7 text-slate-300">
-              백엔드 API 스펙에 맞춘 실제 React 프론트입니다. 인증, 모임 탐색, 참여 신청,
-              일정 관리, 마이페이지까지 하나의 흐름으로 이어집니다.
+    <div className="auth-layout">
+      <div className="auth-layout__backdrop" />
+      <div className="auth-layout__mesh" />
+
+      <div className="auth-layout__container">
+        <section className="auth-layout__hero" aria-label="서비스 소개">
+          <div className="auth-layout__hero-glow auth-layout__hero-glow--top" />
+          <div className="auth-layout__hero-glow auth-layout__hero-glow--bottom" />
+
+          <div className="auth-layout__hero-copy">
+            <p className="auth-layout__eyebrow">ModuPlan</p>
+            <h1 className="auth-layout__title">
+              모임 운영을
+              <span>더 빠르고 </span>
+              <span>더 신속하게</span>
+            </h1>
+            <p className="auth-layout__description">
+              모임 운영을 더 쉽고 빠르게 시작해보세요.
+              모집 현황부터 참여 신청, 일정 관리까지 한 흐름으로
+              이어서 확인할 수 있습니다.
             </p>
           </div>
+
+          <div className="auth-layout__trust">
+            <span>운영 관리</span>
+            <span>신청 관리</span>
+            <span>일정 공유</span>
+          </div>
         </section>
-        <section className="panel p-6 md:p-8">
-          <Outlet />
+
+        <section className="auth-layout__content">
+          <div className="auth-layout__mobile-intro">
+            <p className="auth-layout__mobile-badge">ModuPlan</p>
+            <h1>모임 운영을 시작하는 가장 빠른 방법</h1>
+            <p>가입과 로그인 단계에서도 서비스의 결이 먼저 느껴지도록, 밀도와 신뢰감을 담아 구성했습니다.</p>
+          </div>
+
+          <div className="panel auth-layout__panel">
+            <div className="auth-layout__panel-accent" />
+            <div className="auth-layout__panel-inner">
+              <Outlet />
+            </div>
+          </div>
         </section>
       </div>
     </div>
