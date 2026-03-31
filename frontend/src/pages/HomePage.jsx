@@ -15,19 +15,19 @@ export function HomePage() {
         <div>
           <p className="section-eyebrow">ModuPlan</p>
           <h1 className="max-w-3xl text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
-            ?â‘£í¡???Ñ‰ì—º??ï§¡ì–˜í€¬, ï§â‘¥ì—«??ï§ëš®ë±¾æ€¨? ?ì‡±ì ™æºëš¯? ?ëŒë¼±??æ„¿Â€ç”±Ñ‹ë¹€?ëˆë–Ž.
+            모임 탐색부터 일정 관리까지, 함께하는 계획을 더 쉽고 빠르게 시작하세요.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-slate-500">
-            ModuPlan?Â€ ï§â‘¥ì—« ?ë¨¯ê¹‹éºÂ€??ï§¡ëª„ë¿¬ ?ì¢Žê»Œ, ?ëŒìº ?ì‡±ì ™ æ„¿Â€ç”±Ñˆí‰´ï§žÂ€ ??è¸°ë‰ë¿‰ ?ê³Œê»?ì„Žë’— ?ì’•í‰¬?ã…¼ì—¯?ëˆë–Ž.
-            ?ê¾©ì˜± ?ë¶¾ãˆƒ?Â€ ?ã…¼ì £ è«›ê¹†ë¿??API?Â€ ?ê³•ë£ž???ê³—ì” ?ê³•ì­” ?ÑŠìŠœ?â‘¸ë•²??
+            ModuPlan은 모임을 만들고 참여하는 과정, 그리고 일정과 참여 현황을 한곳에서 관리할 수 있도록 구성된
+            서비스입니다. 로그인 후 추천 모임을 확인하고, 관심 있는 그룹에 바로 참여해보세요.
           </p>
         </div>
         <div className="rounded-[2rem] bg-slate-950 p-6 text-white">
-          <p className="text-sm font-semibold text-brand-100">è«›ë¶¾ì¤ˆ ?ì’–ì˜‰?ì„ë¦°</p>
+          <p className="text-sm font-semibold text-brand-100">빠르게 시작하는 방법</p>
           <ul className="mt-4 space-y-4 text-sm leading-6 text-slate-300">
-            <li>ï§â‘¥ì—« ï§¡ì–˜ë¦°?ë¨¯ê½Œ ç§»ëŒ„ë€’æ€¨ì¢Šâ”, ï§žÂ€?? ?ã…¼ì™?ì’•ì¤ˆ ?ë¨¯ê¹‹</li>
-            <li>æ„¿Â€???ëˆë’— ï§â‘¥ì—« ?ê³¸ê½­?ë¨¯ê½Œ ï§¡ëª„ë¿¬ ?ì¢Žê»Œ</li>
-            <li>??ï§â‘¥ì—«æ€¨????ëº£ë‚« ?ì„ì” ï§žÂ€?ë¨¯ê½Œ ?ì’•ë£ž æ„¿Â€ç”±?/li>
+            <li>관심 있는 카테고리와 지역을 기준으로 원하는 모임을 찾아보세요.</li>
+            <li>모임 상세 정보와 참여 조건을 확인한 뒤 바로 신청할 수 있습니다.</li>
+            <li>참여한 모임의 일정을 확인하고 계획을 놓치지 않게 관리하세요.</li>
           </ul>
         </div>
       </section>
@@ -36,16 +36,16 @@ export function HomePage() {
         <section className="page-section">
           <PageHeader
             eyebrow="Featured"
-            title="ï§žÂ€æ¹²??ì„Žìœ­è¹‚?ï§ëš°ë¸³ ï§â‘¥ì—«"
-            description="???ë¶¾ãˆƒ?ë¨¯ê½Œ??ï§â‘¥ì—« ï§â‘¸ì¤‰ APIç‘œ??ÑŠê¶—?â‘ºë¹ ï§¤ì’–ë–Š ï§â‘¥ì—« ?ì‡°?ç‘œ?è¹‚ëŒë¿¬ä»¥ë¾ë•²??"
+            title="지금 바로 확인할 수 있는 추천 모임"
+            description="로그인한 사용자에게 추천 모임을 보여주고, 최신 그룹 목록을 빠르게 탐색할 수 있도록 구성했습니다."
           />
 
           {groupsQuery.isLoading ? <LoadingState /> : null}
           {groupsQuery.isError ? (
-            <EmptyState title="ï§â‘¥ì—«??éºëˆìœ­?ã…¼? ï§ì‚µë»½?ë“¬ë•²??" description={groupsQuery.error.message} />
+            <EmptyState title="모임 정보를 불러오지 못했습니다." description={groupsQuery.error.message} />
           ) : null}
           {groupsQuery.data && groupsQuery.data.content.length === 0 ? (
-            <EmptyState title="?ê¹…ì¤‰??ï§â‘¥ì—«???ë†ë’¿?ëˆë–Ž." description="ï§£?è¸°ë‰ãŽ ï§â‘¥ì—«??ï§žê³¸ì ’ ï§ëš®ë±¾?ëŒ€ë‚«?ëª„ìŠ‚." />
+            <EmptyState title="추천할 모임이 아직 없습니다." description="새로운 모임이 등록되면 이곳에서 바로 확인할 수 있습니다." />
           ) : null}
 
           {groupsQuery.data?.content.length ? (

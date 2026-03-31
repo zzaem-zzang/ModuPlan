@@ -20,7 +20,14 @@ export function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayout />}>
-          <Route path={ROUTES.home} element={<HomePage />} />
+          <Route
+            path={ROUTES.home}
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
           <Route path={ROUTES.groups} element={<GroupListPage />} />
           <Route path="/groups/:groupId" element={<GroupDetailPage />} />
           <Route
@@ -84,7 +91,7 @@ export function AppRouter() {
           />
         </Route>
 
-        <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
+        <Route path="*" element={<Navigate to={ROUTES.login} replace />} />
       </Routes>
     </BrowserRouter>
   )
