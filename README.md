@@ -1,3 +1,4 @@
+
 # ModuPlan Backend
 
 카카오톡·밴드 중심으로 관리되던 비정형 소모임 운영의 불편함을 개선하기 위한 **소모임 일정 및 운영 관리 서비스 백엔드 프로젝트**입니다.  
@@ -22,11 +23,30 @@
 
 ## 기술 스택
 
-- **Java 17**
-- **Spring Boot**
-- **Spring Data JPA**
-- **Spring Security**
-- **MySQL**
+
+### Backend
+- Java 17
+- Spring Boot 4.0.3
+- Spring Web MVC
+- Spring Data JPA
+- Spring Security
+- Spring Validation
+- Redis (Spring Data Redis)
+- JWT (JJWT)
+- Swagger / OpenAPI (springdoc)
+- MySQL
+- Lombok
+- Gradle
+
+### Frontend
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Axios
+- Tailwind CSS
+- ESLint
+
 
 ---
 
@@ -83,4 +103,4 @@
 - AWS 배포
 - 테스트 코드 작성 및 리팩토링
 
----
+
