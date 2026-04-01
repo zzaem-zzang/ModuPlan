@@ -37,16 +37,7 @@ public class GroupInviteCodeServiceImpl implements GroupInviteCodeService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-        Group group = groupRepository.findByIdAndDeletedAtIsNullAndStatus(groupId, GroupStatus.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("모임을 찾을 수 없습니다."));
-
-        if (!group.getLeader().getId().equals(userId)) {
-            throw new ForbiddenException("모임장만 초대코드를 생성할 수 있습니다.");
-        }
-
-        if (group.getIsPublic()) {
-            throw new BadRequestException("공개 모임은 초대코드를 생성할 수 없습니다.");
-        }
+        Group group = getManageablePrivateGroup(userId, groupId);
 
         boolean hasActiveCode = groupInviteCodeRepository
                 .findFirstByGroup_IdAndStatusOrderByCreatedAtDesc(groupId, GroupInviteCodeStatus.ACTIVE)
@@ -65,6 +56,33 @@ public class GroupInviteCodeServiceImpl implements GroupInviteCodeService {
 
         GroupInviteCode savedInviteCode = groupInviteCodeRepository.save(inviteCode);
         return GroupInviteCodeCreateResponse.from(savedInviteCode);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GroupInviteCodeCreateResponse getInviteCode(Long userId, Long groupId) {
+        getManageablePrivateGroup(userId, groupId);
+
+        GroupInviteCode inviteCode = groupInviteCodeRepository
+                .findFirstByGroup_IdAndStatusOrderByCreatedAtDesc(groupId, GroupInviteCodeStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("활성화된 초대코드가 없습니다."));
+
+        return GroupInviteCodeCreateResponse.from(inviteCode);
+    }
+
+    private Group getManageablePrivateGroup(Long userId, Long groupId) {
+        Group group = groupRepository.findByIdAndDeletedAtIsNullAndStatus(groupId, GroupStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("모임을 찾을 수 없습니다."));
+
+        if (!group.getLeader().getId().equals(userId)) {
+            throw new ForbiddenException("모임장만 초대코드를 관리할 수 있습니다.");
+        }
+
+        if (group.getIsPublic()) {
+            throw new BadRequestException("공개 모임은 초대코드를 사용할 수 없습니다.");
+        }
+
+        return group;
     }
 
     private String generateUniqueCode() {

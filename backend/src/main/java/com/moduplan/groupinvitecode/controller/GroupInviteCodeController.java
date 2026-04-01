@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,5 +37,22 @@ public class GroupInviteCodeController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(201, "초대코드가 생성되었습니다.", response));
+    }
+
+    @Operation(summary = "모임 초대코드 조회")
+    @GetMapping
+    public ResponseEntity<ApiResponse<GroupInviteCodeCreateResponse>> getInviteCode(
+            Authentication authentication,
+            @PathVariable Long groupId
+    ) {
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new UnauthorizedException("인증이 필요합니다.");
+        }
+
+        Long userId = (Long) authentication.getPrincipal();
+        GroupInviteCodeCreateResponse response = groupInviteCodeService.getInviteCode(userId, groupId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(200, "초대코드를 조회했습니다.", response));
     }
 }
