@@ -1,4 +1,5 @@
-a# ModuPlan Backend
+
+# ModuPlan Backend
 
 카카오톡·밴드 중심으로 관리되던 비정형 소모임 운영의 불편함을 개선하기 위한 **소모임 일정 및 운영 관리 서비스 백엔드 프로젝트**입니다.  
 모임 생성, 참여 신청, 승인/거절, 일정 관리 기능을 통해 보다 체계적인 모임 운영 경험을 제공하는 것을 목표로 합니다.
@@ -22,6 +23,7 @@ a# ModuPlan Backend
 
 ## 기술 스택
 
+
 ### Backend
 - Java 17
 - Spring Boot 4.0.3
@@ -44,6 +46,7 @@ a# ModuPlan Backend
 - Axios
 - Tailwind CSS
 - ESLint
+
 
 ---
 
@@ -100,4 +103,4 @@ a# ModuPlan Backend
 - AWS 배포
 - 테스트 코드 작성 및 리팩토링
 
----
+
