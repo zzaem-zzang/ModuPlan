@@ -46,16 +46,7 @@ public class GroupInviteCodeServiceImpl implements GroupInviteCodeService {
             throw new ConflictException("이미 사용 가능한 초대코드가 존재합니다.");
         }
 
-        GroupInviteCode inviteCode = GroupInviteCode.create(
-                group,
-                generateUniqueCode(),
-                null,
-                null,
-                user
-        );
-
-        GroupInviteCode savedInviteCode = groupInviteCodeRepository.save(inviteCode);
-        return GroupInviteCodeCreateResponse.from(savedInviteCode);
+        return createAndSaveInviteCode(group, user);
     }
 
     @Override
@@ -68,6 +59,20 @@ public class GroupInviteCodeServiceImpl implements GroupInviteCodeService {
                 .orElseThrow(() -> new NotFoundException("활성화된 초대코드가 없습니다."));
 
         return GroupInviteCodeCreateResponse.from(inviteCode);
+    }
+
+    @Override
+    public GroupInviteCodeCreateResponse regenerateInviteCode(Long userId, Long groupId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Group group = getManageablePrivateGroup(userId, groupId);
+
+        groupInviteCodeRepository
+                .findFirstByGroup_IdAndStatusOrderByCreatedAtDesc(groupId, GroupInviteCodeStatus.ACTIVE)
+                .ifPresent(GroupInviteCode::revoke);
+
+        return createAndSaveInviteCode(group, user);
     }
 
     private Group getManageablePrivateGroup(Long userId, Long groupId) {
@@ -83,6 +88,19 @@ public class GroupInviteCodeServiceImpl implements GroupInviteCodeService {
         }
 
         return group;
+    }
+
+    private GroupInviteCodeCreateResponse createAndSaveInviteCode(Group group, User user) {
+        GroupInviteCode inviteCode = GroupInviteCode.create(
+                group,
+                generateUniqueCode(),
+                null,
+                null,
+                user
+        );
+
+        GroupInviteCode savedInviteCode = groupInviteCodeRepository.save(inviteCode);
+        return GroupInviteCodeCreateResponse.from(savedInviteCode);
     }
 
     private String generateUniqueCode() {
